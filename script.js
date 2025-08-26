@@ -1,20 +1,61 @@
-function parseDate(str) {
-  const [d, m, y] = str.split("/").map(Number);
-  return new Date(y, m - 1, d);
+function autoFormatDate(input) {
+  let value = input.value.replace(/[^0-9]/g, ""); // allow only digits
+
+  if (value.length >= 2 && value.length <= 4) {
+    value = value.slice(0, 2) + "/" + value.slice(2);
+  } else if (value.length > 4) {
+    value = value.slice(0, 2) + "/" + value.slice(2, 4) + "/" + value.slice(4, 8);
+  }
+
+  // restrict length to 10 (dd/mm/yyyy)
+  input.value = value.slice(0, 10);
 }
 
-function formatDate(date) {
-  let d = date.getDate().toString().padStart(2, "0");
-  let m = (date.getMonth() + 1).toString().padStart(2, "0");
-  let y = date.getFullYear();
-  return `${d}/${m}/${y}`;
+// ✅ validate if the date is real
+function isValidDate(dateString) {
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return false;
+
+  const [day, month, year] = dateString.split("/").map(Number);
+  const date = new Date(year, month - 1, day);
+
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
 }
+
+function getTodayDate() {
+  const today = new Date();
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const year = today.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
 function calculateInterest() {
   const startDate = new Date(document.getElementById("startDate").value);
   const endDateInput = document.getElementById("endDate").value;
   const endDate = endDateInput ? new Date(endDateInput) : new Date();
   const principal = parseFloat(document.getElementById("principal").value);
   const rate = parseFloat(document.getElementById("rate").value) / 100;
+let start = document.getElementById("start").value;
+let end = document.getElementById("end").value;
+
+// validate start date
+if (!isValidDate(start)) {
+  alert("Please enter a valid Start Date (dd/mm/yyyy)");
+  return;
+}
+
+// if end date empty → default to today
+if (!end) {
+  end = getTodayDate();
+  document.getElementById("end").value = end; // auto-fill in UI
+} else if (!isValidDate(end)) {
+  alert("Please enter a valid End Date (dd/mm/yyyy)");
+  return;
+}
 
   if (!startDate || isNaN(principal) || principal <= 0) {
     document.getElementById("result").innerHTML = "⚠️ Please fill all fields correctly.";
