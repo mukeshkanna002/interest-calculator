@@ -10,10 +10,11 @@
   <div class="container">
     <h2>கண்ணா அடகு கடை</h2>
    <label for="start">Start Date (dd/mm/yyyy):</label>
-   <input type="text" id="start" placeholder="dd/mm/yyyy" required>
+<input type="text" id="start" placeholder="dd/mm/yyyy" maxlength="10" required oninput="autoFormatDate(this)">
 
-   <label for="end">End Date (dd/mm/yyyy, optional):</label>
-   <input type="text" id="end" placeholder="dd/mm/yyyy">
+<label for="end">End Date (dd/mm/yyyy, optional):</label>
+<input type="text" id="end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoFormatDate(this)">
+
 
     <label for="principal">Amount</label>
     <input type="number" id="principal" placeholder="Enter amount">
