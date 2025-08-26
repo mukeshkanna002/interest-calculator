@@ -1,35 +1,57 @@
 function calculateInterest() {
-  const startDate = new Date(document.getElementById("startDate").value);
-  const endDate = new Date(document.getElementById("endDate").value);
-  const principal = parseFloat(document.getElementById("principal").value);
-  const rate = parseFloat(document.getElementById("rate").value) / 100;
+  const startDate = new Date(document.getElementById("start").value);
+  const endInput = document.getElementById("end").value;
+  const endDate = endInput ? new Date(endInput) : new Date();
+  const principal = parseFloat(document.getElementById("amount").value);
+  const rate = parseFloat(document.getElementById("rate").value);
 
-  if (!startDate || !endDate || isNaN(principal) || principal <= 0) {
-    document.getElementById("result").innerHTML = "⚠️ Please fill all fields correctly.";
+  if (!startDate || isNaN(principal) || isNaN(rate)) {
+    document.getElementById("result").innerHTML = "<p>Please fill all fields correctly.</p>";
     return;
   }
 
-  if (endDate <= startDate) {
-    document.getElementById("result").innerHTML = "⚠️ End date must be after start date.";
-    return;
+  // Calculate duration
+  let years = endDate.getFullYear() - startDate.getFullYear();
+  let months = endDate.getMonth() - startDate.getMonth();
+  let days = endDate.getDate() - startDate.getDate();
+
+  if (days < 0) {
+    months--;
+    const prevMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+  if (months < 0) {
+    years--;
+    months += 12;
   }
 
-  let diffDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+  // Convert total duration into months & days
+  let totalMonths = years * 12 + months;
+  let extraDays = days;
 
-  let months = Math.floor(diffDays / 30);
-  let days = diffDays % 30;
-
-  let extraInterestMonths = 0;
-  if (days > 17) {
-    extraInterestMonths = 1;
-  } else if (days > 5) {
-    extraInterestMonths = 0.5;
+  // Rule: If extraDays > 5 → add half month, if > 17 → add full month
+  if (extraDays > 17) {
+    totalMonths += 1;
+    extraDays = 0;
+  } else if (extraDays > 5) {
+    extraDays = 15;
   }
 
-  let totalMonths = months + extraInterestMonths;
-  let interest = principal * rate * totalMonths;
+  // Calculate interest
+  let monthlyRate = rate / 100;
+  let interest = (principal * monthlyRate * totalMonths);
+  if (extraDays === 15) {
+    interest += principal * monthlyRate * 0.5;
+  }
 
-  document.getElementById("result").innerHTML =
-    `📅 Duration: ${months} month(s) ${days} day(s)<br>` +
-    `💰 Interest @ ${rate * 100}%: <b>${interest.toFixed(2)}</b>`;
+  // Totals
+  let total = principal + interest;
+  let oneMonthInterest = principal * monthlyRate;
+  let newTotal = total - oneMonthInterest;
+
+  document.getElementById("result").innerHTML = `
+    <p><strong>Duration:</strong> ${years} years, ${months} months, ${days} days</p>
+    <p><strong>Interest:</strong> ₹${interest.toFixed(2)}</p>
+    <p><strong>Total:</strong> ₹${total.toFixed(2)}</p>
+    <p style="color:green;"><strong>New Total (1 month less):</strong> ₹${newTotal.toFixed(2)}</p>`;
 }
