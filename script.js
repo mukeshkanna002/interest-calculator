@@ -1,3 +1,10 @@
+fuction formatDate(date)
+{
+  let d = date.getDate().toString().padStart(2, "0");
+  let m = (date.getMonth()+1).toString().padStart(2, "0");
+  let y = date.getFullYear();
+  return `${d}/${m}/${y}`;
+}  
 function calculateInterest() {
   const startDate = new Date(document.getElementById("startDate").value);
   const endDateInput = document.getElementById("endDate").value;
