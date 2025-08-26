@@ -27,10 +27,11 @@ function calculateInterest() {
   }
 
   let totalMonths = months + extraInterestMonths;
-
+  let Total =principal * rate * totalMonths + interest;
   let interest = principal * rate * totalMonths;
 
   document.getElementById("result").innerHTML =
     `📅 Duration: ${months} month(s) ${days} day(s)<br>` +
+    `📅 Total: ${Total} <br>` +
     `💰 Interest @ ${rate * 100}%: <b>${interest.toFixed(2)}</b>`;
 }
