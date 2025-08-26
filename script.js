@@ -39,6 +39,6 @@ function calculateInterest() {
   document.getElementById("result").innerHTML =
     `📅 Duration: ${months} month(s) ${days} day(s)<br>` +
     `💰 Interest @ ${rate * 100}%: <b>${interest.toFixed(2)}</b><br>` +
-    `📊 Total: <b>${total.toFixed(2)}</b><br>` +
-    `✨ NEW Total (1 month less): <b>${newTotal.toFixed(2)}</b>`;
+    `📊 Total: <b>${newTotal.toFixed(2)}</b><br>` +
+    `✨ NEW Total : <b>${total.toFixed(2)}</b>`;
 }
